@@ -1,17 +1,28 @@
 package make.zip.add;
 
-public class JavaFinalProject {
+import java.util.ArrayList;
+import make.zip.add.utils.FileReadWrite;
+import make.zip.add.utils.MakeFirstThread;
+import make.zip.add.utils.MakeSecondThread;
+
+public class JavaFinalProject{
 
 	public void run(String[] args) {
 		
-
+		ArrayList<String> Paths = FileReadWrite.getPaths(args);
+		
+		String in = FileReadWrite.getinput();
+		String out = FileReadWrite.getoutput();
+		
+		Runnable obj1 = new MakeFirstThread(Paths,in,out);
+		Runnable obj2 = new MakeSecondThread();
+		
+		Thread th1 = new Thread(obj1);
+		Thread th2 = new Thread(obj2);
+		
+		th1.start();
+		th2.start();
 	}
 
 }
 
-/*
-데이터를 입력받는다. poi로
-filed 갯수가 같은 것끼리
-입력받아서 같은것끼리 합친다.
-확인을 한다.
-*/
