@@ -11,21 +11,39 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+
+
 public class ExcelReader {
 	
 	public ArrayList<String> getData(InputStream is) {
 		ArrayList<String> values = new ArrayList<String>();
-		
+		int i = 0,j = 0;
 		try (InputStream inp = is) {
 		    
 		        Workbook wb = WorkbookFactory.create(inp);
 		        Sheet sheet = wb.getSheetAt(0);
-		        Row row = sheet.getRow(4);//세로
-		        Cell cell = row.getCell(1);//가로
-		        if (cell == null)
-		            cell = row.createCell(3);
-		        
-		        values.add(cell.getStringCellValue());
+		        while(true) {
+		        	Row row = sheet.getRow(i);//
+		        	if(row == null) break;
+		        	
+		        	Cell cell = row.getCell(j);// 
+		        	j++;
+		        	if (cell == null) {
+			            j = 0;
+			            i++;
+			        }
+			        else {
+			        	if(isStringDouble(cell)) {
+			        		double k;
+			        		k = cell.getNumericCellValue();
+			        		String s = String.valueOf((int)k);
+			        		values.add(s);
+			        	}
+			        	else {
+			        		values.add(cell.getStringCellValue()); 
+			        	}
+			        }
+		        }
 		        
 		    } catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -35,4 +53,13 @@ public class ExcelReader {
 		
 		return values;
 	}
+	
+	public static boolean isStringDouble(Cell cell){
+		try {
+			cell.getStringCellValue();
+			return false;
+		}catch(IllegalStateException e) {
+			return true;
+		}
+	  }
 }

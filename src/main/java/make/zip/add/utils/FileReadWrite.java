@@ -21,18 +21,23 @@ public class FileReadWrite {
 		ArrayList<String>savePaths = new ArrayList<String>();
 		Options options = createOptions();
 		
-		if(parseOptions(options, args)) {
-			if (help){
-				printHelp(options);
-				System.exit(0);
+		try {
+			if(parseOptions(options, args)) {
+				if (help){
+					printHelp(options);
+					System.exit(0);
+				}
+				File dir = new File(input);
+				File[] fileList = dir.listFiles();
+				
+				for(File subfile:fileList) {
+					savePaths.add(subfile.getName());
+				}
+				
 			}
-			File dir = new File(input);
-			File[] fileList = dir.listFiles();
-			
-			for(File subfile:fileList) {
-				savePaths.add(subfile.getName());
-			}
-			
+		}catch(NullPointerException e) {
+			System.out.println("The file path does not exist. Please check your CLI argument!");
+			System.exit(0);
 		}
 		return savePaths;
 	}
